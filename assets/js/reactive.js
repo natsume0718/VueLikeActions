@@ -7,10 +7,18 @@ const mapping = new WeakMap();
  * メソッドの格納
  * @param {function} fn
  */
-function effect(fn) {
-  activeEffect = fn;
-  activeEffect();
-  activeEffect = null;
+function effect(fn, { computed = false } = {}) {
+  try {
+    activeEffect = fn;
+    activeEffect.computed = computed;
+    if (activeEffect.computed) {
+      activeEffect.dirty = true;
+    }
+    activeEffect();
+    return activeEffect;
+  } finally {
+    activeEffect = null;
+  }
 }
 
 /**
@@ -30,7 +38,11 @@ function trigger(target, key) {
   }
 
   deps.forEach((effect) => {
-    effect();
+    if (effect.computed) {
+      effect.dirty = true;
+    } else {
+      effect();
+    }
   });
 }
 
