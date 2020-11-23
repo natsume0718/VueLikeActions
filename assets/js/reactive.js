@@ -22,8 +22,15 @@ function trigger(target, key) {
   if (!dependencyMap) {
     return;
   }
-  const effect = dependencyMap.get(key);
-  effect();
+  /** @type Set */
+  const deps = dependencyMap.get(key);
+  if (!deps) {
+    return;
+  }
+
+  deps.forEach((effect) => {
+    effect();
+  });
 }
 
 /**
@@ -32,12 +39,31 @@ function trigger(target, key) {
  * @param {string} key
  */
 function track(target, key) {
+  /**
+   * WeakMapにtargetをキーにマップを登録します
+   * 二回目以降はmapが取得できる
+   * @type Map
+   */
   let dependencyMap = mapping.get(target);
   if (!dependencyMap) {
     dependencyMap = new Map();
     mapping.set(target, dependencyMap);
   }
-  dependencyMap.set(key, activeEffect);
+
+  /**
+   * mapにsetを登録します
+   * 二回目以降はsetが取得できる
+   * @type Set
+   */
+  let multiplePropertyEffect = dependencyMap.get(key);
+  if (!multiplePropertyEffect) {
+    multiplePropertyEffect = new Set();
+    dependencyMap.set(key, multiplePropertyEffect);
+  }
+  // setにメソッドを追加していきます
+  if (!multiplePropertyEffect.has(activeEffect)) {
+    multiplePropertyEffect.add(activeEffect);
+  }
 }
 
 /**

@@ -18,3 +18,7 @@ effect(() => {
   document.querySelector("#js-view").textContent = obj.counter;
   document.querySelector("#js-reactiveResult").textContent = obj.counter * 2;
 });
+
+effect(() => {
+  console.log(`obj changed: ${obj.counter}`);
+});
