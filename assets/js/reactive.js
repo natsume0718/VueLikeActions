@@ -10,6 +10,7 @@ const mapping = new WeakMap();
 function effect(fn) {
   activeEffect = fn;
   activeEffect();
+  activeEffect = null;
 }
 
 /**
@@ -39,6 +40,9 @@ function trigger(target, key) {
  * @param {string} key
  */
 function track(target, key) {
+  if (activeEffect === null) {
+    return;
+  }
   /**
    * WeakMapにtargetをキーにマップを登録します
    * 二回目以降はmapが取得できる
