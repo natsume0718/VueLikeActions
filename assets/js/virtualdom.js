@@ -52,6 +52,12 @@ function createVirtualNode(type = "", props = {}, children = "") {
   };
 }
 
+/**
+ * @param {{ type, props, children }} prevNode
+ * @typedef {Object} nextNode
+ * @param {{ type, props, children }} nextNode
+ * @param {Element} container
+ */
 function patch(prevNode, nextNode, container) {
   let el = null;
 
@@ -77,9 +83,19 @@ function patch(prevNode, nextNode, container) {
     }
   }
   // 子要素の比較と追加
-  if (el && prevNode.children !== nextNode.children) {
-    console.log(el, prevNode, nextNode);
-    domOperator.html(el, nextNode.children);
+  if (nextNode.children instanceof Array) {
+    for (let i = 0; i < nextNode.children.length; i++) {
+      if (prevNode.hasOwnProperty(i)) {
+        patch(prevNode.children[i], nextNode.children[i], el);
+      } else {
+        patch(createVirtualNode(), nextNode.children[i], el);
+      }
+    }
+  } else {
+    if (el && prevNode.children !== nextNode.children) {
+      console.log(el, prevNode, nextNode);
+      domOperator.html(el, nextNode.children);
+    }
   }
 }
 
