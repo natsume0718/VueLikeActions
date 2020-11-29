@@ -71,8 +71,9 @@ function patch(prevNode, nextNode, container) {
         domOperator.on(el, key.substring("2").toLowerCase(), () => {
           nextProp();
         });
+      } else {
+        domOperator.setAttr(el, key, nextProp);
       }
-      domOperator.setAttr(el, key, nextProp);
     }
   }
   // 子要素の比較と追加
