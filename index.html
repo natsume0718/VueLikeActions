@@ -20,7 +20,13 @@
         <button id="js-reactiveIncrement">+</button>
         <button id="js-reactiveDecrement">-</button>
     </p>
+    <h1>仮想DOM</h1>
+    <p>仮想DOMは、ブラウザが持っていたDOMツリーを、JavaScriptのオブジェクト（仮想DOMツリー）として表現します。
+        そして、メモリ上の仮想DOMツリーを用いて差分検知を行い、必要最低限の差分のみをリアルDOMに反映するため、一般的にパフォーマンスが向上すると言われています。
+    </p>
+    <div id="app"></div>
     <script type="module" src="./reactive.ex.js"></script>
+    <script type="module" src="./virtualdom.ex.js"></script>
 </body>
 
 </html>
