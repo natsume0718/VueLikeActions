@@ -63,8 +63,10 @@ function patch(prevNode, nextNode, container) {
 
   // dom自体の変更の反映
   if (prevNode.type !== nextNode.type) {
-    el = domOperator.create(nextNode.type);
+    el = nextNode.el = domOperator.create(nextNode.type);
     domOperator.append(container, el);
+  } else {
+    el = nextNode.el = prevNode.el;
   }
 
   // propsの変更の反映
